@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
-import { Address, StartingPoint } from '../types';
+import { Address, StartingPoint } from '../types/index';
 import { calculateOptimalRoute } from '../services/routeService';
 import { Check, X, MapPin, Navigation } from 'lucide-react';
 

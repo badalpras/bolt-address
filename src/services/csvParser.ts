@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import { Address } from '../types';
+import { Address } from '../types/index';
 
 export function parseCSV(file: File): Promise<Address[]> {
   return new Promise((resolve, reject) => {

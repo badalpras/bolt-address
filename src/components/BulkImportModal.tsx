@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { X } from 'lucide-react';
-import { AddressData } from '../types';
+import { AddressData } from '../types/index';
 
 interface BulkImportModalProps {
   isOpen: boolean;
@@ -15,13 +15,13 @@ const BulkImportModal: React.FC<BulkImportModalProps> = ({ isOpen, onClose, onIm
   const handleImport = () => {
     const lines = bulkText.trim().split('\n');
     const addresses: AddressData[] = lines.map((line, index) => {
-      const [name = '', address = ''] = line.split('\t');
+      const [businessName = '', address = ''] = line.split('\t');
       return {
         id: `bulk-${Date.now()}-${index}`,
-        name: name.trim(),
+        businessName: businessName.trim(),
         address: address.trim()
       };
-    }).filter(addr => addr.name || addr.address);
+    }).filter(addr => addr.businessName || addr.address);
 
     if (addresses.length > 0) {
       onImport(addresses);

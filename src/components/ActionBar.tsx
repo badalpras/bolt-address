@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { AddressData } from '../types';
+import { AddressData } from '../types/index';
 import { geocodeAddresses } from '../services/geocoding';
 import { parseCSV } from '../services/csvParser';
 import { FileUp, MapPin, Trash2, ClipboardList } from 'lucide-react';
@@ -18,7 +18,7 @@ const ActionBar: React.FC<ActionBarProps> = ({ addresses, onAddressesChange }) =
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleGeocodeAddresses = useCallback(async () => {
-    const addressesToGeocode = addresses.filter(a => a.address && !a.coordinates);
+    const addressesToGeocode = addresses.filter(a => a.address && (a.latitude == null || a.longitude == null));
     
     if (addressesToGeocode.length === 0) {
       alert('No addresses to geocode. Add addresses or make sure they are not already geocoded.');
@@ -27,7 +27,7 @@ const ActionBar: React.FC<ActionBarProps> = ({ addresses, onAddressesChange }) =
 
     setIsGeocoding(true);
     try {
-      const geocodedAddresses = await geocodeAddresses(addressesToGeocode);
+      const geocodedAddresses = await geocodeAddresses(addressesToGeocode.map(a => a.address));
       
       const updatedAddresses = addresses.map(address => {
         const geocoded = geocodedAddresses.find(g => g.address === address.address);
@@ -90,7 +90,7 @@ const ActionBar: React.FC<ActionBarProps> = ({ addresses, onAddressesChange }) =
       // Small delay to ensure UI updates
       await new Promise(resolve => setTimeout(resolve, 50));
       
-      const parsedAddresses = await parseCSV<AddressData>(file);
+      const parsedAddresses = await parseCSV(file);
       console.log('Parsed addresses:', parsedAddresses.length);
       
       if (!Array.isArray(parsedAddresses) || parsedAddresses.length === 0) {
@@ -181,7 +181,7 @@ Demo Store,321 Market St San Francisco CA`;
           <button
             className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center disabled:bg-blue-300"
             onClick={handleGeocodeAddresses}
-            disabled={isGeocoding || addresses.filter(a => a.address && !a.coordinates).length === 0}
+            disabled={isGeocoding || addresses.filter(a => a.address && (a.latitude == null || a.longitude == null)).length === 0}
           >
             {isGeocoding ? (
               <Spinner size={16} className="mr-2" />
