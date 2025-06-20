@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Trash2, RotateCw, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
-import { Address } from '../types';
+import { Address } from '../types/index';
 
 interface AddressTableProps {
   addresses: Address[];
@@ -60,16 +60,16 @@ const AddressTable: React.FC<AddressTableProps> = ({
         return (
           <CheckCircle 
             size={14} 
-            className="text-green-600" 
-            title="Successfully geocoded"
+            className="text-green-600"
+            aria-label="Successfully geocoded"
           />
         );
       case 'pending':
         return (
           <AlertCircle 
             size={14} 
-            className="text-yellow-600" 
-            title="Needs geocoding"
+            className="text-yellow-600"
+            aria-label="Needs geocoding"
           />
         );
       default:
@@ -83,24 +83,24 @@ const AddressTable: React.FC<AddressTableProps> = ({
         <table className="w-full">
           <thead className="bg-gray-50 sticky top-0 z-10">
             <tr>
-              <th className="w-12 px-1 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="w-12 px-1 py-1 text-left text-xs font-medium text-gray-500 uppercase">
                 Actions
               </th>
-              <th className="w-16 px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase">
+              <th className="w-16 px-1 py-1 text-center text-xs font-medium text-gray-500 uppercase">
                 Status
               </th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase">
                 Business Name
               </th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase">
                 Address
               </th>
               {showCoordinates && (
                 <>
-                  <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-1 py-1 text-left text-xs font-medium text-gray-500 uppercase">
                     Latitude
                   </th>
-                  <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-1 py-1 text-left text-xs font-medium text-gray-500 uppercase">
                     Longitude
                   </th>
                 </>
@@ -117,7 +117,7 @@ const AddressTable: React.FC<AddressTableProps> = ({
                 } ${address.isDuplicate ? 'bg-red-50' : ''} ${
                   address.isOnRoute ? 'bg-green-50' : ''
                 } ${address.isSelected ? 'bg-blue-50 border-l-4 border-blue-400' : ''}`}
-                style={{ height: '40px' }}
+                style={{ height: '36px' }}
               >
                 <td className="px-1 py-1">
                   <div className="flex items-center space-x-1">
@@ -140,10 +140,10 @@ const AddressTable: React.FC<AddressTableProps> = ({
                     )}
                   </div>
                 </td>
-                <td className="px-2 py-1 text-center">
+                <td className="px-1 py-1 text-center">
                   {renderGeocodingStatus(address)}
                 </td>
-                <td className="px-3 py-1">
+                <td className="px-2 py-1">
                   {editingCell?.id === address.id && editingCell?.field === 'businessName' ? (
                     <input
                       type="text"
@@ -164,7 +164,7 @@ const AddressTable: React.FC<AddressTableProps> = ({
                     </div>
                   )}
                 </td>
-                <td className="px-3 py-1">
+                <td className="px-2 py-1">
                   {editingCell?.id === address.id && editingCell?.field === 'address' ? (
                     <input
                       type="text"
@@ -189,10 +189,10 @@ const AddressTable: React.FC<AddressTableProps> = ({
                 </td>
                 {showCoordinates && (
                   <>
-                    <td className="px-2 py-1 text-xs text-gray-600">
+                    <td className="px-1 py-1 text-xs text-gray-600">
                       {address.latitude ? address.latitude.toFixed(6) : '-'}
                     </td>
-                    <td className="px-2 py-1 text-xs text-gray-600">
+                    <td className="px-1 py-1 text-xs text-gray-600">
                       {address.longitude ? address.longitude.toFixed(6) : '-'}
                     </td>
                   </>

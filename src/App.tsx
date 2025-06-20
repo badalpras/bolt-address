@@ -7,7 +7,7 @@ import AddressTable from './components/AddressTable';
 import MapControls from './components/MapControls';
 import MapComponent from './components/MapComponent';
 import TabDelimitedModal from './components/TabDelimitedModal';
-import { Address, StartingPoint, RouteData } from './types';
+import { Address, StartingPoint, RouteData } from './types/index';
 
 function App() {
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -181,7 +181,8 @@ function App() {
   const handlePolygonComplete = useCallback((selectedAddresses: Address[]) => {
     setAddresses(prev => prev.map(addr => ({
       ...addr,
-      isSelected: selectedAddresses.some(selected => selected.id === addr.id)
+      isSelected: selectedAddresses.some(selected => selected.id === addr.id),
+      isHighlighted: selectedAddresses.some(selected => selected.id === addr.id)
     })));
   }, []);
 
@@ -324,6 +325,15 @@ function App() {
       <div className="flex-1 flex overflow-hidden min-h-0">
         {/* Left Panel - Table (60% width) */}
         <div className="w-3/5 flex flex-col bg-white border-r border-gray-200 min-h-0">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-lg font-semibold">Addresses</h2>
+            <button
+              onClick={() => setAddresses(prev => prev.map(addr => ({ ...addr, isHighlighted: true })))}
+              className="px-3 py-1 bg-yellow-400 text-gray-900 rounded hover:bg-yellow-500 transition-colors text-sm font-medium"
+            >
+              Debug: Highlight All Rows
+            </button>
+          </div>
           <TableControls
             onFileUpload={handleFileUpload}
             onClearTable={handleClearTable}

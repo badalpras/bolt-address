@@ -1,6 +1,6 @@
 import React from 'react';
 import { Upload, Trash2, MapPin, Eye, EyeOff, Plus } from 'lucide-react';
-import { Address } from '../types';
+import { Address } from '../types/index';
 
 interface TableControlsProps {
   onFileUpload: (file: File) => void;
@@ -35,9 +35,7 @@ const TableControls: React.FC<TableControlsProps> = ({
   // Calculate statistics
   const totalRows = addresses.length;
   const geocodedRows = addresses.filter(addr => addr.latitude && addr.longitude).length;
-  const selectedRows = addresses.filter(addr => addr.isSelected).length;
-  const needGeocodingRows = addresses.filter(addr => addr.address && (!addr.latitude || !addr.longitude)).length;
-  const completionPercentage = totalRows > 0 ? Math.round((geocodedRows / totalRows) * 100) : 0;
+  const errorRows = addresses.filter(addr => addr.address && (!addr.latitude || !addr.longitude)).length;
 
   return (
     <div className="p-3 bg-white border-b border-gray-200">
@@ -71,9 +69,9 @@ const TableControls: React.FC<TableControlsProps> = ({
 
           <button
             onClick={onGeocodeAll}
-            disabled={needGeocodingRows === 0 || isGeocoding}
+            disabled={errorRows === 0 || isGeocoding}
             className="inline-flex items-center justify-center w-9 h-9 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-            title={isGeocoding ? 'Geocoding all addresses...' : `Geocode ${needGeocodingRows} addresses`}
+            title={isGeocoding ? 'Geocoding all addresses...' : `Geocode ${errorRows} addresses`}
           >
             <MapPin size={16} className={isGeocoding ? 'animate-pulse' : ''} />
           </button>
@@ -111,16 +109,11 @@ const TableControls: React.FC<TableControlsProps> = ({
                 {geocodedRows}
               </span>
             </div>
-            {selectedRows > 0 && (
-              <div className="flex items-center space-x-1">
-                <span className="font-medium text-gray-700 text-xs">Selected:</span>
-                <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-semibold min-w-[1.5rem] text-center">
-                  {selectedRows}
-                </span>
-              </div>
-            )}
-            <div className="text-xs text-gray-600 font-medium">
-              {completionPercentage}%
+            <div className="flex items-center space-x-1">
+              <span className="font-medium text-gray-700 text-xs">Errors:</span>
+              <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-semibold min-w-[1.5rem] text-center">
+                {errorRows}
+              </span>
             </div>
           </div>
         )}
